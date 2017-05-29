@@ -175,7 +175,7 @@
   },
   "resources": [
     {
-      "apiVersion": "[variables('apiVersion')]",
+      "apiVersion": "2016-02-03",
       "location": "[variables('location')]",
       "name": "[parameters('iotHubName')]",
       "properties": {
