@@ -200,8 +200,8 @@
         "name": "[parameters('skuName')]",
         "capacity": "[parameters('capacityUnits')]"
       },
-      "type": "Microsoft.Devices/iotHubs"
-    },
+      "type": "Microsoft.Devices/IotHubs"
+    }
     //{
     //  "apiVersion": "[variables('apiVersion')]",
     //  "dependsOn": [
