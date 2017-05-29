@@ -1,0 +1,220 @@
+//{
+//    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+//    "contentVersion": "1.0.0.0",
+//    "parameters": {
+//        "databaseAccounts_iottempdb_name": {
+//            "defaultValue": null,
+//            "type": "SecureString"
+//        },
+//        "IotHubs_cosmoscheck_name": {
+//            "defaultValue": "cosmoscheck",
+//            "type": "String"
+//        },
+//        "databaseAccounts_iottempdb_name_1": {
+//            "defaultValue": "iottempdb",
+//            "type": "String"
+//        }
+//    },
+//    "variables": {},
+//    "resources": [
+//        {
+//            "comments": "Generalized from resource: '/subscriptions/55d19f44-bf45-4d2d-a3cc-53f70a30228a/resourceGroups/CosmosCheck/providers/Microsoft.Devices/IotHubs/cosmoscheck'.",
+//            "type": "Microsoft.Devices/IotHubs",
+//            "sku": {
+//                "name": "S1",
+//                "tier": "Standard",
+//                "capacity": 1
+//            },
+//            "name": "[parameters('IotHubs_cosmoscheck_name')]",
+//            "apiVersion": "2016-02-03",
+//            "location": "eastus",
+//            "tags": {},
+//            "scale": null,
+//            "properties": {
+//                "ipFilterRules": [],
+//                "eventHubEndpoints": {
+//                    "events": {
+//                        "retentionTimeInDays": 1,
+//                        "partitionCount": 2,
+//                        "partitionIds": [
+//                            "0",
+//                            "1"
+//                        ],
+//                        "path": "[parameters('IotHubs_cosmoscheck_name')]",
+//                        "endpoint": "sb://iothub-ns-cosmoschec-167695-ebbc7fdba9.servicebus.windows.net/"
+//                    },
+//                    "operationsMonitoringEvents": {
+//                        "retentionTimeInDays": 1,
+//                        "partitionCount": 2,
+//                        "partitionIds": [
+//                            "0",
+//                            "1"
+//                        ],
+//                        "path": "[concat(parameters('IotHubs_cosmoscheck_name'),'-operationmonitoring')]",
+//                        "endpoint": "sb://iothub-ns-cosmoschec-167695-ebbc7fdba9.servicebus.windows.net/"
+//                    }
+//                },
+//                "routing": {
+//                    "endpoints": {
+//                        "serviceBusQueues": [],
+//                        "serviceBusTopics": [],
+//                        "eventHubs": []
+//                    },
+//                    "routes": [],
+//                    "fallbackRoute": {
+//                        "name": "$fallback",
+//                        "source": "DeviceMessages",
+//                        "condition": "true",
+//                        "endpointNames": [
+//                            "events"
+//                        ],
+//                        "isEnabled": true
+//                    }
+//                },
+//                "storageEndpoints": {
+//                    "$default": {
+//                        "sasTtlAsIso8601": "PT1H",
+//                        "connectionString": "",
+//                        "containerName": ""
+//                    }
+//                },
+//                "enableFileUploadNotifications": false,
+//                "cloudToDevice": {
+//                    "maxDeliveryCount": 10,
+//                    "defaultTtlAsIso8601": "PT1H",
+//                    "feedback": {
+//                        "lockDurationAsIso8601": "PT1M",
+//                        "ttlAsIso8601": "PT1H",
+//                        "maxDeliveryCount": 10
+//                    }
+//                },
+//                "operationsMonitoringProperties": {
+//                    "events": {
+//                        "None": "None",
+//                        "Connections": "None",
+//                        "DeviceTelemetry": "None",
+//                        "C2DCommands": "None",
+//                        "DeviceIdentityOperations": "None",
+//                        "FileUploadOperations": "None",
+//                        "Routes": "None"
+//                    }
+//                },
+//                "features": "None"
+//            },
+//            "dependsOn": []
+//        },
+//        {
+//            "comments": "Generalized from resource: '/subscriptions/55d19f44-bf45-4d2d-a3cc-53f70a30228a/resourceGroups/CosmosCheck/providers/Microsoft.DocumentDB/databaseAccounts/iottempdb'.",
+//            "type": "Microsoft.DocumentDB/databaseAccounts",
+//            "kind": "GlobalDocumentDB",
+//            "name": "[parameters('databaseAccounts_iottempdb_name_1')]",
+//            "apiVersion": "2015-04-08",
+//            "location": "East US",
+//            "tags": {
+//                "defaultExperience": "DocumentDB"
+//            },
+//            "scale": null,
+//            "properties": {
+//                "databaseAccountOfferType": "Standard",
+//                "consistencyPolicy": {
+//                    "defaultConsistencyLevel": "Session",
+//                    "maxIntervalInSeconds": 5,
+//                    "maxStalenessPrefix": 100
+//                },
+//                "name": "[parameters('databaseAccounts_iottempdb_name')]"
+//            },
+//            "dependsOn": []
+//        }
+//    ]
+//}
+
+
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "iotHubName": {
+      "type": "string",
+      "minLength": 3,
+      "metadata": {
+        "description": "Name of the IoT Hub instance to provision."
+      }
+    },
+    "skuName": {
+      "type": "string",
+      "allowedValues": [
+        "F1",
+        "S1",
+        "S2"
+      ],
+      "defaultValue": "F1",
+      "metadata": {
+        "description": "One of the supported SKUs: F1, S1 or S2"
+      }
+    },
+    "capacityUnits": {
+      "type": "int",
+      "minValue": 1,
+      "defaultValue": 1,
+      "metadata": {
+        "description": "Number of desired IoT Hub units. Restricted to 1 unit for F1. Can be set up to maximum number allowed for subscription."
+      }
+    },
+    "d2cConsumerGroupName": {
+      "type": "string",
+      "minLength": 3,
+      "defaultValue": "cg1",
+      "metadata": {
+        "description": "Name of device-to-cloud consumer group to provision on the IoT Hub instance."
+      }
+    }
+  },
+  "variables": {
+    "apiVersion": "2016-02-03",
+    "location": "[resourceGroup().location]"
+  },
+  "resources": [
+    {
+      "apiVersion": "[variables('apiVersion')]",
+      "location": "[variables('location')]",
+      "name": "[parameters('iotHubName')]",
+      "properties": {
+        "eventHubEndpoints": {
+          "events": {
+            "retentionTimeInDays": 7,
+            "partitionCount": 2
+          }
+        },
+        "cloudToDevice": {
+          "defaultTtlAsIso8601": "PT1H",
+          "maxDeliveryCount": 10,
+          "feedback": {
+            "maxDeliveryCount": 10,
+            "ttlAsIso8601": "PT1H",
+            "lockDurationAsIso8601": "PT60S"
+          }
+        },
+        "location": "[resourceGroup().location]"
+      },
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "capacity": "[parameters('capacityUnits')]"
+      },
+      "type": "Microsoft.Devices/iotHubs"
+    },
+    //{
+    //  "apiVersion": "[variables('apiVersion')]",
+    //  "dependsOn": [
+    //    "[concat('Microsoft.Devices/iothubs/', parameters('iotHubName'))]"
+    //  ],
+    //  "name": "[concat(parameters('iotHubName'), '/events/',parameters('d2cConsumerGroupName'))]",
+    //  "type": "Microsoft.Devices/iotHubs/eventhubEndpoints/ConsumerGroups"
+    //}
+  ],
+  "outputs": {
+    "iotHubKeys": {
+      "value": "[listKeys(resourceId('Microsoft.Devices/iotHubs', parameters('iotHubName')), variables('apiVersion'))]",
+      "type": "object"
+    }
+  }
+}
