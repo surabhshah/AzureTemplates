@@ -66,9 +66,15 @@
         xDisk ADDataDisk {
             DiskNumber = 2
             DriveLetter = "F"
-            DependsOn = "[xWaitForDisk]Disk2"
+            <#DependsOn = "[xWaitForDisk]Disk2"#>
         }
-
+<#
+        cDiskNoRestart ADDataDisk
+        {
+            DiskNumber = 2
+            DriveLetter = "F"
+        }
+#>
         WindowsFeature ADDSInstall 
         { 
             Ensure = "Present" 
@@ -95,10 +101,10 @@
             DomainName = $DomainName
             DomainAdministratorCredential = $DomainCreds
             SafemodeAdministratorPassword = $DomainCreds
-            DatabasePath = "F:\NTDS"
+            <#DatabasePath = "F:\NTDS"
             LogPath = "F:\NTDS"
             SysvolPath = "F:\SYSVOL"
-	        DependsOn = @("[xDisk]ADDataDisk", "[WindowsFeature]ADDSInstall")
+	        DependsOn = "[xDisk]ADDataDisk"#>
         } 
 
    }
