@@ -56,18 +56,18 @@
 	        DependsOn = "[WindowsFeature]DNS"
         }
 
-        xWaitforDisk Disk2
+        <#xWaitforDisk Disk2
         {
             DiskNumber = 2
             RetryIntervalSec =$RetryIntervalSec
             RetryCount = $RetryCount
-        }
+        }#>
 
-        xDisk ADDataDisk {
+        <#xDisk ADDataDisk {
             DiskNumber = 2
             DriveLetter = "F"
-            <#DependsOn = "[xWaitForDisk]Disk2"#>
-        }
+            DependsOn = "[xWaitForDisk]Disk2"
+        }#>
 <#
         cDiskNoRestart ADDataDisk
         {
