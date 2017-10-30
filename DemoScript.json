@@ -28,7 +28,7 @@
     }
   },
   "variables": {
-    "streamAnalyticsJobName": "MyAceJobName"
+    "streamAnalyticsJobName": "MySAJob1"
   },
   "resources": [
     {
