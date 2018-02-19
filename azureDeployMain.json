@@ -1,0 +1,35 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "AuthenticationMechanism": {
+            "type": "string",
+            "allowedValues": [
+                "AD",
+                "B2C"
+            ],
+            "defaultValue": "AD",
+            "metadata": {
+                "description": "Name of the IoT Hub instance to provision."
+            }
+        }
+    },
+    "variables": {
+        "templateLink": "[concat('https://raw.githubusercontent.com/surabhshah/AzureTemplates/master/',parameters('AuthenticationMechanism'),'Deploy.json')]"
+    },
+  "resources": [
+    {
+      "apiVersion": "2017-05-10",
+      "name": "linkedTemplate",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "incremental",
+        "templateLink": {
+          "uri": "[variables('templateLink')]",
+          "contentVersion": "1.0.0.0"
+        }
+      }
+    }
+  ],
+    "outputs": {}
+}
