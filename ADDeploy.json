@@ -5,12 +5,20 @@
     "adName": {
       "type": "string",
       "minLength": 3,
+      "defaultValue": "AD1",
+      "metadata": {
+        "description": "Name of the AD"
+      }
+    },
+    "iotHubName": {
+      "type": "string",
+      "minLength": 3,
       "defaultValue": "surabhiothub2017",
       "metadata": {
         "description": "Name of the IoT Hub instance to provision."
       }
     },
-    "adDisplayName": {
+    "userDisplayName": {
       "type": "string",
       "minLength": 3,
       "defaultValue": "Surabh Shah",
@@ -18,7 +26,7 @@
         "description": "Your name for connecting Stream Analytics to PowerBI."
       }
     },
-    "adLoginName": {
+    "userLoginName": {
       "type": "string",
       "minLength": 3,
       "defaultValue": "surabh.shah@mobiliya.com",

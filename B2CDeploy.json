@@ -5,12 +5,20 @@
     "b2cName": {
       "type": "string",
       "minLength": 3,
+      "defaultValue": "b2cName",
+      "metadata": {
+        "description": "Name of the b2C"
+      }
+    },
+    "iotHubName": {
+      "type": "string",
+      "minLength": 3,
       "defaultValue": "surabhiothub2017",
       "metadata": {
         "description": "Name of the IoT Hub instance to provision."
       }
     },
-    "b2cDisplayName": {
+    "userDisplayName": {
       "type": "string",
       "minLength": 3,
       "defaultValue": "Surabh Shah",
@@ -18,7 +26,7 @@
         "description": "Your name for connecting Stream Analytics to PowerBI."
       }
     },
-    "b2cLoginName": {
+    "userLoginName": {
       "type": "string",
       "minLength": 3,
       "defaultValue": "surabh.shah@mobiliya.com",
