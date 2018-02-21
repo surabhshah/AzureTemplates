@@ -62,7 +62,6 @@
       "type": "Microsoft.Insights/components",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[parameters('webSiteName')]"
       ],
       "tags": {
         "displayName": "AppInsightsComponent"
@@ -118,7 +117,17 @@
           "properties": {
             "InstrumentationKey": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightName')), '2014-04-01').InstrumentationKey]"
           }
-        }
+        },
+        {
+            "apiVersion": "2015-08-01",
+            "name": "Redirect HTTP to HTTPS",
+            "type": "siteextensions",
+            "dependsOn": [
+              "[resourceId('Microsoft.Web/Sites', parameters('webSiteName'))]"
+            ],
+            "properties": {
+            }
+          }
       ]
     }
     //{
