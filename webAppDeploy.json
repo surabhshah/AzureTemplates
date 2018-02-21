@@ -1,0 +1,146 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "skuName": {
+      "type": "string",
+      "defaultValue": "S1",
+      "allowedValues": [
+        "F1",
+        "D1",
+        "B1",
+        "B2",
+        "B3",
+        "S1",
+        "S2",
+        "S3",
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "metadata": {
+        "description": "Describes plan's pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
+      }
+    },
+    "skuCapacity": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1,
+      "metadata": {
+        "description": "Describes plan's instance count"
+      }
+    },
+	"hostingPlanName": {
+	  "type": "string",
+	  "defaultValue": "AppServPlan",
+	  "metadata": {
+	    "description": "Describes Hosting plan's name"
+	  }
+	},
+	"webSiteName" : {
+	  "type": "string",
+	  "metadata": {
+	    "description": "Describes webSite name which should be unique"
+	  }
+	}//,
+	//"apiServerName" : {
+	//  "type": "string",
+	//  "metadata": {
+	//    "description": "Describes API Server name which should be unique"
+	//  }
+	//}
+  },
+  "variables": {
+    "appInsightName": "[concat('AppInsights', uniquestring(resourceGroup().id))]"
+
+  },
+  "resources": [
+    {
+      "apiVersion": "2014-04-01",
+      "name": "[variables('appInsightName')]",
+      "type": "Microsoft.Insights/components",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[parameters('webSiteName')]"
+      ],
+      "tags": {
+        "displayName": "AppInsightsComponent"
+      },
+      "properties": {
+        "ApplicationId": "[variables('appInsightName')]"
+      }
+    },
+    {
+      "apiVersion": "2016-03-01",
+      "name": "[parameters('hostingPlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "HostingPlan"
+      },
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "capacity": "[parameters('skuCapacity')]"
+      },
+      "properties": {
+        "name": "[parameters('hostingPlanName')]"
+      }
+    },
+    {
+      "apiVersion": "2016-03-01",
+      "name": "[parameters('webSiteName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[parameters('hostingPlanName')]",
+        "[variables('appInsightName')]"
+      ],
+      "tags": {
+        "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName')))]": "empty",
+        "displayName": "Website"
+      },
+      "properties": {
+        "name": "[parameters('webSiteName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+      },
+      "resources": [
+        {
+          "name": "appsettings",
+          "type": "config",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]"
+          ],
+          "tags": {
+            "displayName": "WebAppSettings"
+          },
+          "properties": {
+            "InstrumentationKey": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightName')), '2014-04-01').InstrumentationKey]"
+          }
+        }
+      ]
+    }
+    //{
+    //  "apiVersion": "2016-03-01",
+    //  "name": "[parameters('apiServerName')]",
+    //  "type": "Microsoft.Web/sites",
+    //  "location": "[resourceGroup().location]",
+    //  "dependsOn": [
+    //    "[parameters('hostingPlanName')]"
+    //  ],
+    //  "tags": {
+    //    "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName')))]": "empty",
+    //    "displayName": "Website"
+    //  },
+    //  "properties": {
+    //    "name": "[parameters('apiServerName')]",
+    //    "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+    //  }
+    //}
+  ],
+  "outputs": {
+    
+  }
+
+}
