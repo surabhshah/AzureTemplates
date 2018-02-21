@@ -126,7 +126,7 @@
               "[resourceId('Microsoft.Web/Sites', parameters('webSiteName'))]"
             ],
           "properties": {
-            "extensionUrl": "https://www.siteextensions.net/packages/RedirectHttpToHttps/"
+            "extension_url": "https://www.siteextensions.net/packages/RedirectHttpToHttps/"
           }
           }
       ]
